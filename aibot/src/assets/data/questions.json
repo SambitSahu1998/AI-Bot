@@ -1,0 +1,15 @@
+[
+  { "question": "Hi, what is the weather", "subtitle": "Get immediate AI generated response" },
+  {
+    "question": "Hi, what is my location",
+    "subtitle": "Get immediate AI generated response"
+  },
+  {
+    "question": "Hi, what is the temperature",
+    "subtitle": "Get immediate AI generated response"
+  },
+  {
+    "question": "Hi, how are you",
+    "subtitle": "Get immediate AI generated response"
+  }
+]
