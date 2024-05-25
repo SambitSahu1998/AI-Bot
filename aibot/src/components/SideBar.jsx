@@ -8,7 +8,7 @@ const SideBar = ({
   sidebarVisible,
   toggleSidebar,
   onNewChat,
-  onPastConversation,
+  onPastChat,
 }) => {
   return (
     <Box
@@ -16,7 +16,7 @@ const SideBar = ({
       position: { xs: 'fixed', sm: 'relative' },
       top: 0,
       left: 0,
-      width: { xs: '100%', sm: '22.5%' },
+      minWidth: { xs: '100%', sm: '20%' },
       backgroundColor: '#FFFFFF',
       height: { xs: '100vh', sm: '90vh' },
       display: { xs: sidebarVisible ? 'block' : 'none', sm: 'block' },
@@ -79,15 +79,16 @@ const SideBar = ({
         <Button
           variant="contained"
           sx={{
-            width: "72%",
+            borderRadius:"30px",
+            width: "70%",
             fontWeight: "bold",
             color:"#000000",
             background:
               "linear-gradient(0deg, #D7C7F4, #D7C7F4), linear-gradient(0deg, #D7C7F4, #D7C7F4),linear-gradient(0deg, #D7C7F4, #D7C7F4),linear-gradient(0deg, #D7C7F4, #D7C7F4);",
           }}
-          onClick={onPastConversation}
+          onClick={onPastChat}
         >
-          Past Conversation
+          Past Conversations
         </Button>
       </Box>
     </Box>

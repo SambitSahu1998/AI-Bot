@@ -1,51 +1,223 @@
 import React, { useState } from "react";
-import { Box, Typography, Grid, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import yourImage from "../assets/pictures/ownImage.png";
+import GPTIcon from "../assets/pictures/GPTBackgroundImage.png";
 
 const PastConversation = ({ savedData }) => {
-  const [filterRating, setFilterRating] = useState('');
+  const [filterRating, setFilterRating] = useState("");
 
   const handleFilterChange = (event) => {
     setFilterRating(event.target.value);
   };
 
   const filteredData = filterRating
-    ? savedData.filter(item => item.rating === parseInt(filterRating))
+    ? savedData.filter((item) => item.rating === parseInt(filterRating))
     : savedData;
 
   return (
     <Box
       sx={{
         p: 1.8,
-        height: "100%",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
-        background: "linear-gradient(180deg, rgba(215, 199, 244, 0.2) 0%, rgba(151, 133, 186, 0.2) 100%)",
+        background:
+          "linear-gradient(180deg, rgba(215, 199, 244, 0.2) 0%, rgba(151, 133, 186, 0.2) 100%)",
       }}
     >
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel>Filter by Rating</InputLabel>
-        <Select value={filterRating} onChange={handleFilterChange}>
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value={1}>1 Star</MenuItem>
-          <MenuItem value={2}>2 Stars</MenuItem>
-          <MenuItem value={3}>3 Stars</MenuItem>
-          <MenuItem value={4}>4 Stars</MenuItem>
-          <MenuItem value={5}>5 Stars</MenuItem>
-        </Select>
-      </FormControl>
-      <Grid container spacing={2}>
-        {filteredData.map((item, index) => (
-          <Grid item xs={12} key={index}>
-            <Box sx={{ backgroundColor: "#D7C7F4", borderRadius: '5px', mb: 1.5, p: 1.5 }}>
-              <Typography variant="h6">Question: {item.question}</Typography>
-              <Typography variant="h6">Response: {item.response}</Typography>
-              <Typography variant="h6">Date: {item.date}</Typography>
-              <Typography variant="h6">Rating: {item.rating || 'No Rating'}</Typography>
-              <Typography variant="h6">Feedback: {item.feedback || 'No Feedback'}</Typography>
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{ textAlign: "center" }}>
+        <Typography variant="h4" sx={{ mb: "20px" }}>
+          Conversation History
+        </Typography>
+      </Box>
+      <Box sx={{ textAlign: "center" }}>
+        <FormControl sx={{ width: "30%", mb: 2 }}>
+          <InputLabel>Rating Filter</InputLabel>
+          <Select value={filterRating} onChange={handleFilterChange}>
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value={1}>1 Star</MenuItem>
+            <MenuItem value={2}>2 Stars</MenuItem>
+            <MenuItem value={3}>3 Stars</MenuItem>
+            <MenuItem value={4}>4 Stars</MenuItem>
+            <MenuItem value={5}>5 Stars</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box
+        sx={{
+          height: "83vh",
+          overflow: "auto",
+          alignContent: "flex-end",
+          "::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+        }}
+      >
+        <Grid container spacing={2}>
+          {filteredData.map((item, index) => (
+            <Grid item xs={12} key={index}>
+              <Box
+                sx={{
+                  background:
+                    "linear-gradient(90deg, #BFACE2 0%, #D7C7F4 100%)",
+                  borderRadius: "5px",
+                  mb: 1,
+                  p: 1.5,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 1.5,
+                  }}
+                >
+                  <img
+                    src={yourImage}
+                    alt="Not Available"
+                    width="40px"
+                    height="40px"
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <Box sx={{ ml: 1.5 }} display="flex" flexDirection="column">
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                    >
+                      You
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontSize: "15px",
+                        fontWeight: "400",
+                        color: "#888888",
+                      }}
+                    >
+                      {item.question}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontSize: "10px",
+                        fontWeight: "400",
+                        color: "#888888",
+                      }}
+                    >
+                      {item.date}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 1.5,
+                  }}
+                >
+                  <img
+                    src={GPTIcon}
+                    alt="Not Available"
+                    width="40px"
+                    height="40px"
+                    style={{ borderRadius: "50%" }}
+                  />
+                  <Box sx={{ ml: 1 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                    >
+                      Bot AI
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontSize: "15px",
+                        fontWeight: "400",
+                        color: "#888888",
+                      }}
+                    >
+                      {item.response}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontSize: "10px",
+                        fontWeight: "400",
+                        color: "#888888",
+                      }}
+                    >
+                      {item.date}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 1.5,
+                  }}
+                >
+                  <Box sx={{ ml:6 }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontSize: "10px",
+                        fontWeight: "400",
+                        color: "#888888",
+                      }}
+                    >
+                      Feedback: {item.feedback || "No Feedback"}
+                    </Typography>
+                  </Box>
+                </Box>
+                {/* <Box>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Question: {item.question}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Response: {item.response}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Date: {item.date}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Rating: {item.rating || "No Rating"}
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", fontSize: "16px" }}
+                  >
+                    Feedback: {item.feedback || "No Feedback"}
+                  </Typography>
+                </Box> */}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     </Box>
   );
 };

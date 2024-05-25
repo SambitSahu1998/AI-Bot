@@ -1,35 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { Box, Typography, TextField, Button, Grid } from "@mui/material";
-// import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import GPTIcon from "../assets/pictures/GPTBackgroundImage.png";
 import questions from "../assets/data/questions.json";
 import responses from "../assets/data/aiReponseData.json";
 import Feedback from "./Feedback";
-// import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import yourImage from "../assets/pictures/ownImage.png";
 
-const ChatScreen = ({ isNewChat }) => {
+const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
   const [userInput, setUserInput] = useState("");
   const [chatData, setChatData] = useState([]);
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false);
 
   const handleSubmit = () => {
-    if (userInput) {
+    const trimmedInput = userInput.trim();
+    if (trimmedInput.length > 0) {
       const matchedReponse = responses.find(
         (item) => item.question.toLowerCase() === userInput.toLowerCase()
       );
       const response = matchedReponse
         ? matchedReponse.response
         : "Sorry, I don't have an answer for that.";
-      setChatData([...chatData, { question: userInput, response }]);
+      const newEntry = {
+        question: userInput,
+        response,
+        date: new Date().toLocaleString(),
+        rating: null,
+        feedback: "",
+      };
+      setChatData([...chatData, newEntry]);
       setUserInput("");
+      setIsNewChat(false);
+    } else {
+      console.log("error");
     }
   };
 
   const handleSave = () => {
     const savedData = JSON.parse(localStorage.getItem("chatData")) || [];
-    const newData = [...savedData, ...chatData];
-    localStorage.setItem("chatData", JSON.stringify(newData));
+    if (chatData.length > 0) {
+      const newData = [...savedData, ...chatData];
+      localStorage.setItem("chatData", JSON.stringify(newData));
+      setIsNewChat(true);
+      setChatData([]);
+    }
   };
 
   const handleFeedbackSubmit = (feedback) => {
@@ -37,15 +50,27 @@ const ChatScreen = ({ isNewChat }) => {
     setOpenFeedbackModal(false);
   };
 
-//   const handleDislikeClick = () => {
-//     setOpenFeedbackModal(true);
-//   };
+  const handleChange = (event) => {
+    setUserInput(event.target.value);
+  };
+
+  // const handleDislikeClick = () => {
+  //   setOpenFeedbackModal(true);
+  // };
+
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatData]);
 
   return (
     <Box
       sx={{
         p: 1.8,
-        height: "100%",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
         background:
@@ -53,23 +78,43 @@ const ChatScreen = ({ isNewChat }) => {
       }}
     >
       {!isNewChat ? (
-        <>
+        <Box
+          ref={chatContainerRef}
+          sx={{
+            height: "83vh",
+            overflow: "auto",
+            alignContent:'flex-end',
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+            "-ms-overflow-style": "none",
+            "scrollbar-width": "none",
+          }}
+        >
           <Grid
             container
-            spacing={2}
-            sx={{ flex: "1 0 auto", display:'flex', alignItems:'flex-end' }}
+            sx={{ flex: "1 0 auto", display: "flex", alignItems: "flex-end" }}
           >
             {chatData.map((item, index) => (
-              <Grid item xs={12} key={index} >
-                <Box sx={{ backgroundColor: "#D7C7F4" , borderRadius:'5px', mb:1.5, display:'flex', alignItems:'center', padding:1.5}}>
+              <Grid item xs={12} key={index}>
+                <Box
+                  sx={{
+                    backgroundColor: "#D7C7F4",
+                    borderRadius: "5px",
+                    mb: 1.5,
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 1.5,
+                  }}
+                >
                   <img
                     src={yourImage}
                     alt="Not Available"
                     width="40px"
                     height="40px"
-                    style={{borderRadius:'50%'}}
+                    style={{ borderRadius: "50%" }}
                   />
-                  <Box sx={{ml:1.5}} display="flex" flexDirection='column'> 
+                  <Box sx={{ ml: 1.5 }} display="flex" flexDirection="column">
                     <Typography
                       variant="h6"
                       sx={{ fontSize: "16px", fontWeight: "bold" }}
@@ -84,27 +129,38 @@ const ChatScreen = ({ isNewChat }) => {
                         color: "#888888",
                       }}
                     >
-                      Question......
+                      {item.question}
                     </Typography>
-                    <Typography variant="h6"
+                    <Typography
+                      variant="h6"
                       sx={{
                         fontSize: "10px",
                         fontWeight: "400",
                         color: "#888888",
-                      }}>
-                        Date...
+                      }}
+                    >
+                      {item.date}
                     </Typography>
                   </Box>
                 </Box>
-                <Box sx={{ backgroundColor: "#D7C7F4" , borderRadius:'5px', mb:2, display:'flex', alignItems:'center', padding:1.5}}>
+                <Box
+                  sx={{
+                    backgroundColor: "#D7C7F4",
+                    borderRadius: "5px",
+                    mb: 1.5,
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 1.5,
+                  }}
+                >
                   <img
                     src={GPTIcon}
                     alt="Not Available"
                     width="40px"
                     height="40px"
-                    style={{borderRadius:'50%'}}
+                    style={{ borderRadius: "50%" }}
                   />
-                  <Box sx={{ml:1}}> 
+                  <Box sx={{ ml: 1 }}>
                     <Typography
                       variant="h6"
                       sx={{ fontSize: "16px", fontWeight: "bold" }}
@@ -119,22 +175,24 @@ const ChatScreen = ({ isNewChat }) => {
                         color: "#888888",
                       }}
                     >
-                      Answer......
+                      {item.response}
                     </Typography>
-                    <Typography variant="h6"
+                    <Typography
+                      variant="h6"
                       sx={{
                         fontSize: "10px",
                         fontWeight: "400",
                         color: "#888888",
-                      }}>
-                        Date...
+                      }}
+                    >
+                      {item.date}
                     </Typography>
                   </Box>
                 </Box>
               </Grid>
             ))}
           </Grid>
-        </>
+        </Box>
       ) : (
         <>
           <Box
@@ -202,6 +260,8 @@ const ChatScreen = ({ isNewChat }) => {
           variant="outlined"
           fullWidth
           placeholder="Type your question here..."
+          onChange={handleChange}
+          value={userInput}
           sx={{
             mr: 1.8,
             boxShadow: "0px 0px 6.3px 0px",
