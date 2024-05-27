@@ -10,7 +10,9 @@ function App() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true);
   const [isPastChat, setIsPastChat] = useState(false);
+  const [chatData, setChatData] = useState([]);
   const savedData= JSON.parse(localStorage.getItem("chatData")) || [];
+
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -18,6 +20,7 @@ function App() {
 
   const handleNewChat = () => {
     setIsNewChat(true);
+    setChatData([]);
     setIsPastChat(false);
   };
 
@@ -41,7 +44,7 @@ function App() {
         {isPastChat === true ? (
           <PastConversation savedData={savedData}/>
         ) : (
-          <ChatScreen isNewChat={isNewChat} setIsNewChat={setIsNewChat}/>
+          <ChatScreen isNewChat={isNewChat} setIsNewChat={setIsNewChat} chatData={chatData} setChatData={setChatData}/>
         )}
       </Box>
     </Box>

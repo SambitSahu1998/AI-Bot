@@ -22,6 +22,18 @@ const PastConversation = ({ savedData }) => {
     ? savedData.filter((item) => item.rating === parseInt(filterRating))
     : savedData;
 
+    const findDateAndTimeInAMPM = (date) =>{
+      const formattedDate = new Date(date);
+      let hours = formattedDate.getHours();
+      const minutes=formattedDate.getMinutes();
+      const ampm = hours>=12?'PM' :'AM';
+  
+      hours=hours%12;
+      hours=hours? hours:12;
+      const strMinutes = minutes<10?'0'+minutes:minutes;
+      return hours+':'+strMinutes+' '+ampm;
+    }
+
   return (
     <Box
       sx={{
@@ -85,23 +97,23 @@ const PastConversation = ({ savedData }) => {
                   <img
                     src={yourImage}
                     alt="Not Available"
-                    width="40px"
-                    height="40px"
+                    width="50px"
+                    height="50px"
                     style={{ borderRadius: "50%" }}
                   />
                   <Box sx={{ ml: 1.5 }} display="flex" flexDirection="column">
                     <Typography
                       variant="h6"
-                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                      sx={{  fontSize: "18px", fontWeight: "bold"  }}
                     >
                       You
                     </Typography>
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "15px",
+                        fontSize: "16px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
                       {item.question}
@@ -109,12 +121,13 @@ const PastConversation = ({ savedData }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "10px",
+                        mt:1,
+                        fontSize: "13px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
-                      {item.date}
+                      {findDateAndTimeInAMPM(item.date)}
                     </Typography>
                   </Box>
                 </Box>
@@ -128,23 +141,23 @@ const PastConversation = ({ savedData }) => {
                   <img
                     src={GPTIcon}
                     alt="Not Available"
-                    width="40px"
-                    height="40px"
+                    width="50px"
+                    height="50px"
                     style={{ borderRadius: "50%" }}
                   />
                   <Box sx={{ ml: 1 }}>
                     <Typography
                       variant="h6"
-                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                      sx={{  fontSize: "18px", fontWeight: "bold"  }}
                     >
                       Bot AI
                     </Typography>
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "15px",
+                        fontSize: "16px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
                       {item.response}
@@ -152,12 +165,13 @@ const PastConversation = ({ savedData }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "10px",
+                        mt:1,
+                        fontSize: "13px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
-                      {item.date}
+                      {findDateAndTimeInAMPM(item.date)}
                     </Typography>
                   </Box>
                 </Box>
@@ -181,38 +195,6 @@ const PastConversation = ({ savedData }) => {
                     </Typography>
                   </Box>
                 </Box>
-                {/* <Box>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Question: {item.question}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Response: {item.response}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Date: {item.date}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Rating: {item.rating || "No Rating"}
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: "bold", fontSize: "16px" }}
-                  >
-                    Feedback: {item.feedback || "No Feedback"}
-                  </Typography>
-                </Box> */}
               </Box>
             </Grid>
           ))}

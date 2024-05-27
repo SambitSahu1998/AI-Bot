@@ -80,7 +80,7 @@ const SideBar = ({
           variant="contained"
           sx={{
             borderRadius:"30px",
-            width: "70%",
+            width: "85%",
             fontWeight: "bold",
             color:"#000000",
             background:

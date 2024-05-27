@@ -6,11 +6,22 @@ import responses from "../assets/data/aiReponseData.json";
 import Feedback from "./Feedback";
 import yourImage from "../assets/pictures/ownImage.png";
 
-const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
+const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
   const [userInput, setUserInput] = useState("");
-  const [chatData, setChatData] = useState([]);
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false);
 
+  const findDateAndTimeInAMPM = (date) =>{
+    const formattedDate = new Date(date);
+    let hours = formattedDate.getHours();
+    const minutes=formattedDate.getMinutes();
+    const ampm = hours>=12?'PM' :'AM';
+
+    hours=hours%12;
+    hours=hours? hours:12;
+    const strMinutes = minutes<10?'0'+minutes:minutes;
+    return hours+':'+strMinutes+' '+ampm;
+  }
+  
   const handleSubmit = () => {
     const trimmedInput = userInput.trim();
     if (trimmedInput.length > 0) {
@@ -81,7 +92,7 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
         <Box
           ref={chatContainerRef}
           sx={{
-            height: "83vh",
+            height: "87.7vh",
             overflow: "auto",
             alignContent:'flex-end',
             "::-webkit-scrollbar": {
@@ -99,12 +110,15 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
               <Grid item xs={12} key={index}>
                 <Box
                   sx={{
-                    backgroundColor: "#D7C7F4",
-                    borderRadius: "5px",
+                    backgroundColor: "rgba(215, 199, 244, 0.13)",
+                    boxShadow: "0px 0px 7px 0px rgba(0, 0, 0, 0.5)",
+                    borderRadius: "150px",
                     mb: 1.5,
                     display: "flex",
                     alignItems: "center",
-                    padding: 1.5,
+                    padding: "10px 30px ",
+                    ml:1,
+                    mr:1,
                   }}
                 >
                   <img
@@ -117,16 +131,16 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
                   <Box sx={{ ml: 1.5 }} display="flex" flexDirection="column">
                     <Typography
                       variant="h6"
-                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                      sx={{ fontSize: "18px", fontWeight: "bold" }}
                     >
                       You
                     </Typography>
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "15px",
+                        fontSize: "16px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
                       {item.question}
@@ -134,23 +148,27 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "10px",
+                        mt:1,
+                        fontSize: "13px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
-                      {item.date}
+                      {findDateAndTimeInAMPM(item.date)}
                     </Typography>
                   </Box>
                 </Box>
                 <Box
                   sx={{
-                    backgroundColor: "#D7C7F4",
-                    borderRadius: "5px",
+                    backgroundColor: "rgba(215, 199, 244, 0.13)",
+                    boxShadow: "0px 0px 7px 0px rgba(0, 0, 0, 0.5)",
+                    borderRadius: "150px",
                     mb: 1.5,
                     display: "flex",
                     alignItems: "center",
-                    padding: 1.5,
+                    padding: "10px 30px ",
+                    ml:1,
+                    mr:1,
                   }}
                 >
                   <img
@@ -163,16 +181,16 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
                   <Box sx={{ ml: 1 }}>
                     <Typography
                       variant="h6"
-                      sx={{ fontSize: "16px", fontWeight: "bold" }}
+                      sx={{ fontSize: "18px", fontWeight: "bold" }}
                     >
                       Bot AI
                     </Typography>
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "15px",
+                        fontSize: "16px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
                       {item.response}
@@ -180,12 +198,13 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "10px",
+                        mt:1,
+                        fontSize: "13px",
                         fontWeight: "400",
-                        color: "#888888",
+                        color: "#555555",
                       }}
                     >
-                      {item.date}
+                      {findDateAndTimeInAMPM(item.date)}
                     </Typography>
                   </Box>
                 </Box>
@@ -218,7 +237,7 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
               style={{
                 borderRadius: "50%",
                 marginTop: 9,
-                boxShadow: "0px 0px 9px 0px #888888",
+                boxShadow: "0px 0px 9px 0px #555555",
               }}
             />
           </Box>
@@ -254,6 +273,8 @@ const ChatScreen = ({ isNewChat, setIsNewChat, }) => {
           width: "100%",
           mt: 1,
           flexShrink: 0,
+          ml:0.5,
+          mr:0.5,
         }}
       >
         <TextField
