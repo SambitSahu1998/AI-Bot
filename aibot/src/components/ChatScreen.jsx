@@ -1,5 +1,15 @@
-import React, { useState, useEffect, useRef  } from "react";
-import { Box, Typography, TextField, Button, Grid } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import ThumbUp from '@mui/icons-material/ThumbUpAltOutlined';
+import ThumbDown from '@mui/icons-material/ThumbDownOutlined';
+import Star from '@mui/icons-material/Star';
 import GPTIcon from "../assets/pictures/GPTBackgroundImage.png";
 import questions from "../assets/data/questions.json";
 import responses from "../assets/data/aiReponseData.json";
@@ -9,19 +19,23 @@ import yourImage from "../assets/pictures/ownImage.png";
 const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
   const [userInput, setUserInput] = useState("");
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [ratingIndex, setRatingIndex] = useState(null);
+  const [feedbackIndex, setFeedbackIndex] = useState(null);
+  const [hoverRating, setHoverRating] = useState(null);
 
-  const findDateAndTimeInAMPM = (date) =>{
+
+  const findDateAndTimeInAMPM = (date) => {
     const formattedDate = new Date(date);
     let hours = formattedDate.getHours();
-    const minutes=formattedDate.getMinutes();
-    const ampm = hours>=12?'PM' :'AM';
+    const minutes = formattedDate.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const strMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ":" + strMinutes + " " + ampm;
+  };
 
-    hours=hours%12;
-    hours=hours? hours:12;
-    const strMinutes = minutes<10?'0'+minutes:minutes;
-    return hours+':'+strMinutes+' '+ampm;
-  }
-  
   const handleSubmit = () => {
     const trimmedInput = userInput.trim();
     if (trimmedInput.length > 0) {
@@ -57,7 +71,12 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
   };
 
   const handleFeedbackSubmit = (feedback) => {
-    console.log(feedback);
+    if (feedbackIndex !== null) {
+      const updatedChatData = [...chatData];
+      updatedChatData[feedbackIndex].feedback = feedback;
+      setChatData(updatedChatData);
+      setFeedbackIndex(null);
+    }
     setOpenFeedbackModal(false);
   };
 
@@ -65,15 +84,41 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
     setUserInput(event.target.value);
   };
 
-  // const handleDislikeClick = () => {
-  //   setOpenFeedbackModal(true);
-  // };
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+    setHoverRating(null);
+  };
+
+  const handleLikeClick = (index) => {
+    setRatingIndex(index);
+  };
+
+  const handleDislikeClick = (index) => {
+    setFeedbackIndex(index);
+    setOpenFeedbackModal(true);
+  };
+
+  const handleRatingClick = (index, rating) => {
+    const updatedChatData = [...chatData];
+    updatedChatData[index].rating = rating;
+    setChatData(updatedChatData);
+    setRatingIndex(null);
+  };
+
+  const handleStarHover = (rating) => {
+    setHoverRating(rating);
+  };
 
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [chatData]);
 
@@ -94,7 +139,7 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
           sx={{
             height: "87.7vh",
             overflow: "auto",
-            alignContent:'flex-end',
+            alignContent: "flex-end",
             "::-webkit-scrollbar": {
               display: "none",
             },
@@ -117,8 +162,8 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
                     display: "flex",
                     alignItems: "center",
                     padding: "10px 30px ",
-                    ml:1,
-                    mr:1,
+                    ml: 1,
+                    mr: 1,
                   }}
                 >
                   <img
@@ -148,7 +193,7 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        mt:1,
+                        mt: 1,
                         fontSize: "13px",
                         fontWeight: "400",
                         color: "#555555",
@@ -159,6 +204,8 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
                   </Box>
                 </Box>
                 <Box
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                   sx={{
                     backgroundColor: "rgba(215, 199, 244, 0.13)",
                     boxShadow: "0px 0px 7px 0px rgba(0, 0, 0, 0.5)",
@@ -167,8 +214,8 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
                     display: "flex",
                     alignItems: "center",
                     padding: "10px 30px ",
-                    ml:1,
-                    mr:1,
+                    ml: 1,
+                    mr: 1,
                   }}
                 >
                   <img
@@ -195,17 +242,51 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
                     >
                       {item.response}
                     </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        mt:1,
-                        fontSize: "13px",
-                        fontWeight: "400",
-                        color: "#555555",
-                      }}
-                    >
-                      {findDateAndTimeInAMPM(item.date)}
-                    </Typography>
+                    <Box display="flex" alignItems="center" >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          mt: 1,
+                          fontSize: "13px",
+                          fontWeight: "400",
+                          color: "#555555",
+                          mr:2,
+                        }}
+                      >
+                        {findDateAndTimeInAMPM(item.date)}
+                      </Typography>
+                      {hoveredIndex === index && ratingIndex !== index && (
+                        <Box>
+                          <IconButton onClick={() => handleLikeClick(index)}>
+                            <ThumbUp fontSize="small"/>
+                          </IconButton>
+                          <IconButton onClick={() => handleDislikeClick(index)}>
+                            <ThumbDown fontSize="small"/>
+                          </IconButton>
+                        </Box>
+                      )}
+                      {ratingIndex === index && (
+                        <Box>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <IconButton
+                              key={star}
+                              onClick={() => handleRatingClick(index, star)}
+                              onMouseEnter={() => handleStarHover(star)}
+                              onMouseLeave={() => handleStarHover(null)}
+                            >
+                              <Star
+                                style={{
+                                  color:
+                                    star <= (hoverRating || chatData[index].rating)
+                                      ? "#FFD700"
+                                      : "#000000",
+                                }}
+                              />
+                            </IconButton>
+                          ))}
+                        </Box>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
               </Grid>
@@ -273,8 +354,8 @@ const ChatScreen = ({ isNewChat, setIsNewChat, chatData, setChatData }) => {
           width: "100%",
           mt: 1,
           flexShrink: 0,
-          ml:0.5,
-          mr:0.5,
+          ml: 0.5,
+          mr: 0.5,
         }}
       >
         <TextField

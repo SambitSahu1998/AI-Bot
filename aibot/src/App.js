@@ -13,7 +13,6 @@ function App() {
   const [chatData, setChatData] = useState([]);
   const savedData= JSON.parse(localStorage.getItem("chatData")) || [];
 
-
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };

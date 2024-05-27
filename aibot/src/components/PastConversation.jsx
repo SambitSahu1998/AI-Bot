@@ -8,6 +8,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
 import yourImage from "../assets/pictures/ownImage.png";
 import GPTIcon from "../assets/pictures/GPTBackgroundImage.png";
 
@@ -22,17 +23,17 @@ const PastConversation = ({ savedData }) => {
     ? savedData.filter((item) => item.rating === parseInt(filterRating))
     : savedData;
 
-    const findDateAndTimeInAMPM = (date) =>{
-      const formattedDate = new Date(date);
-      let hours = formattedDate.getHours();
-      const minutes=formattedDate.getMinutes();
-      const ampm = hours>=12?'PM' :'AM';
-  
-      hours=hours%12;
-      hours=hours? hours:12;
-      const strMinutes = minutes<10?'0'+minutes:minutes;
-      return hours+':'+strMinutes+' '+ampm;
-    }
+  const findDateAndTimeInAMPM = (date) => {
+    const formattedDate = new Date(date);
+    let hours = formattedDate.getHours();
+    const minutes = formattedDate.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const strMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ":" + strMinutes + " " + ampm;
+  };
 
   return (
     <Box
@@ -82,7 +83,7 @@ const PastConversation = ({ savedData }) => {
                 sx={{
                   background:
                     "linear-gradient(90deg, #BFACE2 0%, #D7C7F4 100%)",
-                  borderRadius: "5px",
+                  borderRadius: "15px",
                   mb: 1,
                   p: 1.5,
                 }}
@@ -104,7 +105,7 @@ const PastConversation = ({ savedData }) => {
                   <Box sx={{ ml: 1.5 }} display="flex" flexDirection="column">
                     <Typography
                       variant="h6"
-                      sx={{  fontSize: "18px", fontWeight: "bold"  }}
+                      sx={{ fontSize: "18px", fontWeight: "bold" }}
                     >
                       You
                     </Typography>
@@ -121,7 +122,7 @@ const PastConversation = ({ savedData }) => {
                     <Typography
                       variant="h6"
                       sx={{
-                        mt:1,
+                        mt: 1,
                         fontSize: "13px",
                         fontWeight: "400",
                         color: "#555555",
@@ -148,7 +149,7 @@ const PastConversation = ({ savedData }) => {
                   <Box sx={{ ml: 1 }}>
                     <Typography
                       variant="h6"
-                      sx={{  fontSize: "18px", fontWeight: "bold"  }}
+                      sx={{ fontSize: "18px", fontWeight: "bold" }}
                     >
                       Bot AI
                     </Typography>
@@ -162,17 +163,36 @@ const PastConversation = ({ savedData }) => {
                     >
                       {item.response}
                     </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        mt:1,
-                        fontSize: "13px",
-                        fontWeight: "400",
-                        color: "#555555",
-                      }}
-                    >
-                      {findDateAndTimeInAMPM(item.date)}
-                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          mt: 1,
+                          fontSize: "13px",
+                          fontWeight: "400",
+                          color: "#555555",
+                        }}
+                      >
+                        {findDateAndTimeInAMPM(item.date)}
+                      </Typography>
+                      <Box sx={{ml:3}}>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span key={star}>
+                            {star <= item.rating ? (
+                              <Star
+                                style={{ color: "#000000" }}
+                                sx={{ fontSize: "medium" }}
+                              />
+                            ) : (
+                              <StarBorder
+                                style={{ color: "#000000" }}
+                                sx={{ fontSize: "medium" }}
+                              />
+                            )}
+                          </span>
+                        ))}
+                      </Box>
+                    </Box>
                   </Box>
                 </Box>
                 <Box
@@ -182,16 +202,18 @@ const PastConversation = ({ savedData }) => {
                     padding: 1.5,
                   }}
                 >
-                  <Box sx={{ ml:6 }}>
+                  <Box sx={{ ml: 7.3, display: "flex", alignItems: "center" }}>
                     <Typography
                       variant="h6"
                       sx={{
-                        fontSize: "10px",
-                        fontWeight: "400",
-                        color: "#888888",
+                        fontSize: "15px",
+                        fontWeight: "700",
                       }}
                     >
-                      Feedback: {item.feedback || "No Feedback"}
+                      Feedback:
+                    </Typography>
+                    <Typography variant="h6" sx={{ fontSize: "15px", ml: 1 }}>
+                      {item.feedback || "No Feedback"}
                     </Typography>
                   </Box>
                 </Box>
